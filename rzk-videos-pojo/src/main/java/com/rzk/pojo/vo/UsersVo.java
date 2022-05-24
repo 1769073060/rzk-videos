@@ -13,7 +13,7 @@ public class UsersVo {
     @ApiModelProperty(hidden = true)
     @Id
     private String id;
-    @ApiModelProperty(value = "用户名" ,name = "username",example = "lnsfwxuser",required = true)
+    @ApiModelProperty(value = "用户名" ,name = "username",example = "rzkuser",required = true)
     private String username;
     @JsonIgnore
     @ApiModelProperty(value = "密码" ,name = "password",example = "123456",required = true)
