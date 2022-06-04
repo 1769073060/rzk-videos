@@ -35,7 +35,7 @@ public class VideosServiceImpl implements VideosService {
     @Resource
     private VideosVoMapper videosVoMapper;
     @Resource
-    private  UsersMapper usersMapper;
+    private UsersMapper usersMapper;
     @Resource
     private UsersLikeVideosMapper usersLikeVideosMapper;
     @Autowired
@@ -43,9 +43,9 @@ public class VideosServiceImpl implements VideosService {
     @Resource
     private VideosMapper videosMapper;
     @Resource
-    private  CommentsMapper commentsMapper;
+    private CommentsMapper commentsMapper;
     @Resource
-    private  CommentsVoMapper commentsVoMapper;
+    private CommentsVoMapper commentsVoMapper;
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
@@ -69,6 +69,7 @@ public class VideosServiceImpl implements VideosService {
 
     /**
      * 分页与查询视频列表
+     *
      * @param video
      * @param isSaveRecord 1为保存视频，0为不保存
      * @param pageNum
@@ -77,20 +78,20 @@ public class VideosServiceImpl implements VideosService {
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public PagedResult getAllVideosAndUsers( Videos video,Integer isSaveRecord,Integer pageNum, Integer pageSize) {
+    public PagedResult getAllVideosAndUsers(Videos video, Integer isSaveRecord, Integer pageNum, Integer pageSize) {
         String desc = video.getVideoDesc();
         String userId = video.getUserId();
         //  保存热搜
-        if(isSaveRecord != null && isSaveRecord ==1){
+        if (isSaveRecord != null && isSaveRecord == 1) {
             SearchRecords records = new SearchRecords();
-            String id =sid.nextShort();
+            String id = sid.nextShort();
             records.setId(id);
             records.setContent(desc);
             searchRecordsMapper.insert(records);
         }
 
         PageHelper.startPage(pageNum, pageSize);
-     List<VideosVo>    videosVo =   videosVoMapper.selectVideosAndUsers(desc,userId);
+        List<VideosVo> videosVo = videosVoMapper.selectVideosAndUsers(desc, userId);
         PageInfo<VideosVo> pageList = new PageInfo<>(videosVo);
         PagedResult pagedResult = new PagedResult();
         pagedResult.setPage(pageNum);
@@ -103,7 +104,7 @@ public class VideosServiceImpl implements VideosService {
     @Override
     public PagedResult selectMyLikeVideos(String userId, Integer pages, Integer pageSize) {
         PageHelper.startPage(pages, pageSize);
-        List<VideosVo>    videosVo =   videosVoMapper.selectMyLikeVideos(userId);
+        List<VideosVo> videosVo = videosVoMapper.selectMyLikeVideos(userId);
         PageInfo<VideosVo> pageList = new PageInfo<>(videosVo);
         PagedResult pagedResult = new PagedResult();
         pagedResult.setPage(pages);
@@ -116,7 +117,7 @@ public class VideosServiceImpl implements VideosService {
     @Override
     public PagedResult selectFollowVideos(String userId, Integer pages, Integer pageSize) {
         PageHelper.startPage(pages, pageSize);
-        List<VideosVo>    videosVo =   videosVoMapper.selectFollowVideos(userId);
+        List<VideosVo> videosVo = videosVoMapper.selectFollowVideos(userId);
         PageInfo<VideosVo> pageList = new PageInfo<>(videosVo);
         PagedResult pagedResult = new PagedResult();
         pagedResult.setPage(pages);
@@ -136,12 +137,12 @@ public class VideosServiceImpl implements VideosService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void userLikeVideos(String userId, String videoId, String videoUserId) {
-        System.out.println(1+userId);
-        System.out.println(2+videoId);
-        System.out.println(3+videoUserId);
+        System.out.println(1 + userId);
+        System.out.println(2 + videoId);
+        System.out.println(3 + videoUserId);
         //保存用户和视频的喜欢点赞关联关系表
-        String likeId =sid.nextShort();
-        UsersLikeVideos usersLikeVideos =new UsersLikeVideos();
+        String likeId = sid.nextShort();
+        UsersLikeVideos usersLikeVideos = new UsersLikeVideos();
         usersLikeVideos.setId(likeId);
         usersLikeVideos.setUserId(userId);
         usersLikeVideos.setVideoId(videoId);
@@ -157,7 +158,7 @@ public class VideosServiceImpl implements VideosService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void userDislikeVideos(String userId, String videoId, String videoUserId) {
         //删除用户和视频的喜欢点赞关联关系表
-        UsersLikeVideosExample usersLikeVideosExample =new UsersLikeVideosExample();
+        UsersLikeVideosExample usersLikeVideosExample = new UsersLikeVideosExample();
         usersLikeVideosExample.createCriteria().andUserIdEqualTo(userId).andVideoIdEqualTo(videoId);
         usersLikeVideosMapper.deleteByExample(usersLikeVideosExample);
         //2.视频喜欢数量累减
@@ -165,10 +166,11 @@ public class VideosServiceImpl implements VideosService {
         //3.用户受喜欢数量的累减
         usersMapper.subReceiveLikeCount(userId);
     }
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveComment(Comments comment) throws Exception {
-        Set<String> sensitiveWordSet=BadWordUtils.readResource();
+        Set<String> sensitiveWordSet = BadWordUtils.readResource();
         //初始化敏感词库
         BadWordUtils.init(sensitiveWordSet);
         String filterStr = BadWordUtils.replaceSensitiveWord(comment.getComment(), '*');
@@ -178,6 +180,7 @@ public class VideosServiceImpl implements VideosService {
         comment.setCreateTime(new Date());
         commentsMapper.insert(comment);
     }
+
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
 
