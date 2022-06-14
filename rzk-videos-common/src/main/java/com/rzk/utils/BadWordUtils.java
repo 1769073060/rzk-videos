@@ -261,8 +261,8 @@ public class BadWordUtils {
      * @return 读取成功返回set集合 否则抛出异常
      */
     public static Set<String> readResource() throws Exception {
-        String name ="C:\\lnsf_mod_dev\\badword.txt";
-        //String name ="/opt/lnsf_mod_dev/badword.txt";
+        //String name ="C:\\lnsf_mod_dev\\badword.txt";
+        String name ="/opt/jar/badword.txt";
         //存放文件内容的set集合
         Set<String> set = null;
         //获取文件的路径
@@ -314,12 +314,13 @@ public class BadWordUtils {
         sensitiveWordSet.add("啦啦");
         sensitiveWordSet.add("感动");
         sensitiveWordSet.add("发呆");
+        sensitiveWordSet.add("妈滚");
         System.err.println(sensitiveWordSet.size());
         //初始化敏感词库
         BadWordUtils.init(sensitiveWordSet);
 
         System.out.println("敏感词的数量：" + BadWordUtils.sensitiveWordMap.size());
-        String string = "太多的伤感情怀也许只局限于饲养基地 荧幕中的情节胡锦涛。"
+        String string = "太多的妈滚伤感情怀也许只局限于饲养基地 荧幕中的情节胡锦涛。"
                 + "然后我们的扮演的角色就是跟随着主人公的喜红客联盟 怒哀乐而过于牵强的把自己的情感也附加于银幕情节中，然后感动就流泪，"
                 + "难过就躺在某一个人的怀里尽情的阐述心扉或者手机卡复制器一个贱人一杯红酒一部电影在夜 深人静的晚上，关上电话静静的发呆着。";
         System.out.println("待检测语句字数：" + string.length());
