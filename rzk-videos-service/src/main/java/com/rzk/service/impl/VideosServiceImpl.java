@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class VideosServiceImpl implements VideosService {
     private CommentsMapper commentsMapper;
     @Resource
     private CommentsVoMapper commentsVoMapper;
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
@@ -177,6 +179,8 @@ public class VideosServiceImpl implements VideosService {
         String id = sid.nextShort();
         comment.setId(id);
         comment.setComment(filterStr);
+        //Date date = new Date();
+        //String dateStr = sdf.format(date);
         comment.setCreateTime(new Date());
         commentsMapper.insert(comment);
     }
@@ -192,6 +196,8 @@ public class VideosServiceImpl implements VideosService {
 
         for (CommentsVO c : list) {
             String timeAgo = TimeAgoUtils.format(c.getCreateTime());
+            //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            //System.out.println(simpleDateFormat.format(date));
             c.setTimeAgoStr(timeAgo);
         }
 
