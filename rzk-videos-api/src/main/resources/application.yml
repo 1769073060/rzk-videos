@@ -15,9 +15,9 @@ spring:
   datasource:
     name: oos
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql:// :3310/lnsfwx-videos-dev?characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://124.221.132.14:/lnsfwx-videos-dev?characterEncoding=utf8&useSSL=false
     username: root
-    password:
+    password: rzkruizhukai123.
     type: com.alibaba.druid.pool.DruidDataSource
     #Druid 配置
     filters: stat
@@ -38,16 +38,18 @@ spring:
     #如果为true（默认false），当应用向连接池申请连接时，连接池会判断这条连接是否是可用的。
     test-on-borrow: false
 
+
+
   redis:
     #超过时间
     timeout: 10000ms
     #地址
-    host:
+    host: 120.79.7.36
     #端口
     port: 6382
     #数据库
     database: 0
-    password:
+    password: rzkruizhukai123.
     lettuce:
       pool:
         #最大连接数 默认8
@@ -63,7 +65,7 @@ spring:
       #主节点名称
       master: mymaster
       #节点
-      nodes: 1
+      nodes: 120.79.7.36:26381,120.79.7.36:26382,120.79.7.36:26383
 #文件大小 MB必须大写
 #  maxFileSize 是单个文件大小
 #  maxRequestSize是设置总上传的数据大小
@@ -91,5 +93,14 @@ fdfs:
     width: 150
     height: 150
   tracker-list:
-    -
-    -
+    - 120.79.7.36:22122
+    - 120.79.7.36:22122
+rzk:
+  url: http://120.79.7.36:88
+
+minio:
+  endpoint: http://124.221.132.14:9999 #Minio服务所在地址
+  bucketName: rzk #存储桶名称
+  accessKey: VLOOtQHn3r54UOOO #访问的key
+  secretKey: K2CkERoaUrQ9fBa0ZiJwaOmvNkhzjSms #访问的秘钥
+

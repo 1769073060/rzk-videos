@@ -6,6 +6,7 @@ import com.rzk.pojo.vo.UsersVo;
 import com.rzk.service.IdentityUsersService;
 import com.rzk.service.PunishUsersService;
 import com.rzk.service.UsersService;
+import com.rzk.utils.AvatarHelper;
 import com.rzk.utils.JSONResult;
 import com.rzk.utils.MD5Utils;
 import io.swagger.annotations.Api;
@@ -41,6 +42,29 @@ public class RegistLoginController extends BasicController {
 	@ApiOperation(value = "用户注册", notes = "用户注册的接口")
 	@PostMapping("/regist")
 	public JSONResult regist(@RequestBody Users users) throws Exception {
+		//判断是否是微信小程序注册
+		if (users.getId()!=null){
+			//2.判断用户名是否存在
+			boolean userNameIsExist = usersService.queryUsernameIsExist(users.getUsername());
+
+			//3.保存用户注册信息
+			if (!userNameIsExist) {
+				users.setNickname(users.getUsername());
+				users.setPassword(null);
+				users.setFaceImage(AvatarHelper.BASE64_PREFIX +AvatarHelper.createBase64Avatar(Math.abs("springboot.io".hashCode())));
+				users.setFansCounts(0);
+				users.setReceiveLikeCounts(0);
+				users.setFollowCounts(0);
+				users.setUserHidden(0);
+				users.setUserStatus(0);
+				usersService.SaveUsers(users);
+			} else {
+				return JSONResult.errorMsg("用户名已经存在");
+			}
+			users.setPassword("");
+			UsersVo usersVO = setUsersRedisSessionKey(users);
+			return JSONResult.ok(usersVO);
+		}
 		//1.判断用户名与密码不为空
 		if (StringUtils.isBlank(users.getUsername()) || StringUtils.isBlank(users.getPassword())) {
 			return JSONResult.errorMsg("用户名密码不能为空");
@@ -51,6 +75,7 @@ public class RegistLoginController extends BasicController {
 		if (!userNameIsExist) {
 			users.setNickname(users.getUsername());
 			users.setPassword(MD5Utils.getMD5Str(users.getPassword()));
+			users.setFaceImage(AvatarHelper.BASE64_PREFIX +AvatarHelper.createBase64Avatar(Math.abs("springboot.io".hashCode())));
 			users.setFansCounts(0);
 			users.setReceiveLikeCounts(0);
 			users.setFollowCounts(0);
@@ -114,7 +139,7 @@ public class RegistLoginController extends BasicController {
 				UsersVo usersVO = setUsersRedisSessionKey(usersResult);
 				return JSONResult.ok(usersVO);
 			} else if (users1.getUserStatus() == 0) {
-				return JSONResult.errorMsg("学生证审核中~~");
+				return JSONResult.errorMsg("用户审核中~~");
 			} else{
 				return JSONResult.errorMsg("用户封禁中~");
 			}

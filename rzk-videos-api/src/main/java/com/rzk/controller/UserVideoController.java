@@ -2,7 +2,6 @@ package com.rzk.controller;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import com.rzk.pojo.Bgm;
 import com.rzk.pojo.Comments;
 import com.rzk.pojo.Videos;
 import com.rzk.service.BgmService;
@@ -57,8 +56,6 @@ public class UserVideoController extends BasicController {
     private String bucketName;
 
     @Autowired
-    private BgmService bgmService;
-    @Autowired
     private MinioUtils minioUtils;
 
     @PostMapping("/upload")
@@ -88,8 +85,6 @@ public class UserVideoController extends BasicController {
      * 如果文件是视频类型的，那么将文件截图，并将截图和视频上传到MinIO存储
      * 如果文件是图片类型的，那么将图片上传到MinIo存储
      */
-//    @Override
-//    @SneakyThrows
     @ApiOperation(value = "Minio文件上传", notes = "Minio上传视频的接口")
     @ApiImplicitParams(
             @ApiImplicitParam(name = "type", value = "文件类型", required = true, dataType = "String", paramType = "form"))
@@ -148,7 +143,7 @@ public class UserVideoController extends BasicController {
         File tofile = new File(file.getOriginalFilename());
         FileUtils.copyInputStreamToFile(file.getInputStream(), tofile);
         String absolutePath = tofile.getAbsoluteFile().getAbsolutePath();
-        Map<String, Object> screenshot = VideoUtils.getScreenshot(absolutePath);
+        Map<String, Object> screenshot = ScreenShotUtils.getScreenshot(absolutePath);
         String imgPath = (String) screenshot.get("imgPath");
         return imgPath;
     }
